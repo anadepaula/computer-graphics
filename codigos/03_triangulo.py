@@ -14,6 +14,11 @@ import glfw
 import moderngl
 import numpy as np
 
+from pathlib import Path
+
+
+SHADERS = Path(__file__).parent / "shaders"
+
 def erro_glfw(codigo, descricao):
     """Substitui o aviso padrão do pyGLFW: imprime código 
     e descrição de qualquer erro do GLFW em stderr"""
@@ -39,34 +44,19 @@ glfw.make_context_current(janela)
 ctx = moderngl.create_context()
 
 # -------------- lado da GPU
-
-VERTEX_SHADER = """
-#version 400 core
-
-layout(location = 0) in vec4 vPosition;
-layout(location = 1) in vec4 vColors;
-
-out vec4 v2fcolor;
-
-void main() {
-    gl_Position = vPosition;
-    v2fcolor = vColors;
-}
-"""
-
-FRAGMENT_SHADER = """
-#version 400 core
-
-in vec4 v2fcolor;
-out vec4 outfragcolor;
-
-void main() {
-    outfragcolor = v2fcolor;
-}
-"""
-
-# O driver compila e liga os dois shaders agora, em tempo de execução.
-prog = ctx.program(vertex_shader=VERTEX_SHADER, fragment_shader=FRAGMENT_SHADER)
+# O driver compila   e liga os dois shaders agora, em tempo de execução.
+prog = ctx.program(
+    vertex_shader=(
+        SHADERS / "basico.vert"
+    ).read_text(
+        encoding="utf-8"
+    ),
+    fragment_shader=(
+        SHADERS / "basico.frag"
+    ).read_text(
+        encoding="utf-8"
+    ),
+)   
 
 # ------------------- lado da CPU
 
@@ -83,14 +73,14 @@ vertices = np.array([
 # VAO diz como lê-la. '4f 4f' significa quatro floats
 # para vPosition e quatro para vColors, nessa ordem.
 vbo = ctx.buffer(vertices.tobytes())
-vao = ctx.vertex_array(prog, [(vbo, '4f 4f', 'vPosition', 'vColors')])
+vao = ctx.vertex_array(prog, [(vbo, "4f 4f", "vPosition", "vColors")])
 
 while not glfw.window_should_close(janela):
     if glfw.get_key(janela, glfw.KEY_ESCAPE) == glfw.PRESS:
         glfw.set_window_should_close(janela, True)
 
     ctx.clear(1.0, 1.0, 1.0, 1.0)
-    vao.render(moderngl.TRIANGLES)
+    vao.render(moderngl.TRIANGLES)  # testar as alternativas
     glfw.swap_buffers(janela)
     glfw.poll_events()
 
