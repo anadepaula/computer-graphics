@@ -8,6 +8,7 @@ Prof. João Paulo Gois
 
 Executar: python 02_triangulo.py      Sair: ESC ou fechar a janela
 """
+
 import sys
 
 import glfw
@@ -19,10 +20,12 @@ from pathlib import Path
 
 SHADERS = Path(__file__).parent / "shaders"
 
+
 def erro_glfw(codigo, descricao):
-    """Substitui o aviso padrão do pyGLFW: imprime código 
+    """Substitui o aviso padrão do pyGLFW: imprime código
     e descrição de qualquer erro do GLFW em stderr"""
     print(f"GLFW [{codigo}]: {descricao}", file=sys.stderr)
+
 
 glfw.set_error_callback(erro_glfw)
 
@@ -46,46 +49,49 @@ ctx = moderngl.create_context()
 # -------------- lado da GPU
 # O driver compila   e liga os dois shaders agora, em tempo de execução.
 prog = ctx.program(
-    vertex_shader=(
-        SHADERS / "basico.vert"
-    ).read_text(
-        encoding="utf-8"
-    ),
-    fragment_shader=(
-        SHADERS / "basico.frag"
-    ).read_text(
-        encoding="utf-8"
-    ),
-)   
+    vertex_shader=(SHADERS / "basico.vert").read_text(encoding="utf-8"),
+    fragment_shader=(SHADERS / "basico.frag").read_text(encoding="utf-8"),
+)
 
 # ------------------- lado da CPU
 
-# Dados intercalados: posição (x,y,z,w) e cor (r,g,b,a) de cada vértice,
-# vizinhos na memória. 'f4' é float de 32 bits. 
-# Sem dtype, o numpy usa float64 e a GPU leria lixo.
-vertices = np.array([
-     0.0,  0.5, 0.0, 1.0,   1.0, 0.0, 0.0, 1.0,   # v0 topo, vermelho
-    -0.5, -0.5, 0.0, 1.0,   0.0, 1.0, 0.0, 1.0,   # v1 esquerda, verde
-     0.5, -0.5, 0.0, 1.0,   0.0, 0.0, 1.0, 1.0,   # v2 direita, azul
-], dtype='f4')
 
-# O VBO é memória bruta na VRAM. 
+positions = np.array([
+    ( 0.0, 0.5,0.0,1.0,),
+    (-0.5,-0.5,0.0,1.0,),
+    ( 0.5,-0.5,0.0,1.0,),
+])
+colors = np.array([
+    (1.0, 0.0, 0.0, 1.0),  # v0 topo, vermelho
+    (0.0, 1.0, 0.0, 1.0),  # v1 esquerda, verde
+    (0.0, 0.0, 1.0, 1.0),  # v2 direita, azul
+])
+# Dados intercalados: posição (x,y,z,w) e cor (r,g,b,a) de cada vértice,
+# vizinhos na memória. 'f4' é float de 32 bits.
+# Sem dtype, o numpy usa float64 e a GPU leria lixo.
+
+# O VBO é memória bruta na VRAM.
 # VAO diz como lê-la. '4f 4f' significa quatro floats
 # para vPosition e quatro para vColors, nessa ordem.
-vbo = ctx.buffer(vertices.tobytes())
-vao = ctx.vertex_array(prog, [(vbo, "4f 4f", "vPosition", "vColors")])
+vbo_colors = ctx.buffer(colors.tobytes())
+vbo_positions = ctx.buffer(positions.tobytes())
+vao_colors = ctx.vertex_array(prog, [(vbo_colors, "4f", "vPosition")])
+vao_positions = ctx.vertex_array(prog, [(vbo_positions, "4f", "vColors")])
 
 while not glfw.window_should_close(janela):
     if glfw.get_key(janela, glfw.KEY_ESCAPE) == glfw.PRESS:
         glfw.set_window_should_close(janela, True)
 
     ctx.clear(1.0, 1.0, 1.0, 1.0)
-    vao.render(moderngl.TRIANGLES)  # testar as alternativas
+    vao_colors.render(moderngl.TRIANGLES)  # testar as alternativas
+    vao_positions.render(moderngl.TRIANGLES)  # testar as alternativas
     glfw.swap_buffers(janela)
     glfw.poll_events()
 
-vao.release()
-vbo.release()
+vao_positions.release()
+vao_colors.release()
+vbo_positions.release()
+vbo_colors.release()
 prog.release()
 glfw.terminate()
 print("Execucao finalizada.")
