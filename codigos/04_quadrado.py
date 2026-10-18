@@ -3,41 +3,18 @@ Quadrado com EBO: quatro vertices, dois triangulos, seis indices.
 MCCC007-23 - Computacao Grafica - UFABC
 
 Executar: python 04_quadrado.py      Sair: ESC ou fechar a janela
-"""
 import sys
+"""
 from pathlib import Path
 
 import glfw
 import moderngl
 import numpy as np
+from codigos.utils.base_window import janela
 
 SHADERS = Path(__file__).parent / "shaders"
 
-def erro_glfw(codigo, descricao):
-    """Substitui o aviso padrão do pyGLFW: imprime código 
-    e descrição de qualquer erro do GLFW em stderr"""
-    print(f"GLFW [{codigo}]: {descricao}", file=sys.stderr)
-
-
-glfw.set_error_callback(erro_glfw)   # antes de glfw.init(), de proposito
-
-if not glfw.init():
-    sys.exit("FALHA: glfw nao inicializou")
-
-glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
-glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 0)
-glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
-
-
-janela = glfw.create_window(600, 600, "Quadrado com EBO", None, None)
-if not janela:
-    glfw.terminate()
-    sys.exit("FALHA: nao foi possivel criar a janela")
-
-glfw.make_context_current(janela)
 ctx = moderngl.create_context()
-
 prog = ctx.program(
     vertex_shader=(SHADERS / "basico.vert").read_text(encoding="utf-8"),
     fragment_shader=(SHADERS / "basico.frag").read_text(encoding="utf-8"),
