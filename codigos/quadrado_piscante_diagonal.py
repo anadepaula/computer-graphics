@@ -38,6 +38,24 @@ DIAGONAL_13 = create_unsigned_int_array([0, 1, 3,  1, 2, 3])
 DIAGONAL_ALTERNATIVA = False
 MODO_ESCURO = False
 
+def configure_colors_and_positions(prog, ctx):
+    vbo = ctx.buffer(VERTICES)
+    ebo = ctx.buffer(DIAGONAL_02)
+
+    vao = ctx.vertex_array(
+        prog, 
+        [
+            (
+                vbo,
+                f'{FLOAT_32_FOR_VAO} {FLOAT_32_FOR_VAO}',
+                VARIABLE_SHADERS_POSITION,
+                VARIABLE_SHADERS_COLORS,
+            ),
+        ],
+        index_buffer=ebo,
+    )
+    return vao, vbo, ebo
+
 def render_image(window, ctx, vao, callback_function):
     glfw.set_key_callback(window, callback_function)
     while not glfw.window_should_close(window):
@@ -54,7 +72,6 @@ def main(
     window_width=600,
     window_height=600,
 ):
-
     def tecla(janela, key, scancode, action, mode):
         global DIAGONAL_ALTERNATIVA, MODO_ESCURO
         if action != glfw.PRESS:
@@ -80,21 +97,7 @@ def main(
         fragment_shader=basico_fragment_shader,
     )
 
-    vbo = ctx.buffer(VERTICES)
-    ebo = ctx.buffer(DIAGONAL_02)
-
-    vao = ctx.vertex_array(
-        prog, 
-        [
-            (
-                vbo,
-                f'{FLOAT_32_FOR_VAO} {FLOAT_32_FOR_VAO}',
-                VARIABLE_SHADERS_POSITION,
-                VARIABLE_SHADERS_COLORS,
-            ),
-        ],
-        index_buffer=ebo,
-    )
+    vao, vbo, ebo = configure_colors_and_positions(prog, ctx)
 
     render_image(window, ctx, vao, tecla)
     teardown(glfw, (vao, ebo, vbo, prog))
