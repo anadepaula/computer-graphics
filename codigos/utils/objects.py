@@ -1,8 +1,16 @@
 
 import numpy as np
 
-from .basics import FLOAT_32_FOR_NUMPY, VBO_ARRAY_LEN, VAOType
+from .basics import (
+    FLOAT_32_FOR_NUMPY,
+    UNSIGNED_INT_32_FOR_NUMPY,
+    VBO_ARRAY_LEN,
+    VAOType,
+)
 
+
+def create_unsigned_int_array(data):
+    return np.array(data, dtype=UNSIGNED_INT_32_FOR_NUMPY)
 
 def create_byte_array(data, type):
     validate_array(data, type)
@@ -13,11 +21,6 @@ def create_byte_array(data, type):
     return array.tobytes()
 
 def validate_array(data, vao_type):
-    # assert data is a list of tuples of length 4
-    assert isinstance(data, list)
-    assert set(map(type, data)) == {tuple}
-    assert set(map(len, data)) == {VBO_ARRAY_LEN}    
-
     # assert all values are normalized between min_value and max_value of each VAO type
     match vao_type:
         case VAOType.COLORS:
@@ -28,3 +31,14 @@ def validate_array(data, vao_type):
             raise Exception("unreachable?")
 
     assert all(min(quad) >= min_value and max(quad) <= max_value for quad in data)
+    # assert data is a list of tuples of length 4
+    assert isinstance(data, list)
+    assert set(map(type, data)) == {tuple}
+    assert set(map(len, data)) == {VBO_ARRAY_LEN}    
+
+def create_colors_and_positions_byte_array(data):
+    array = np.array(
+        data,
+        dtype=FLOAT_32_FOR_NUMPY
+    )
+    return array.tobytes()
