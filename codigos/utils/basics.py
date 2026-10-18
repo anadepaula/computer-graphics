@@ -5,9 +5,11 @@ FLOAT_32_FOR_NUMPY = "f4"
 UNSIGNED_INT_32_FOR_NUMPY = "u4"
 VBO_ARRAY_LEN = 4
 
-RED = (1.0, 0.0, 0.0, 1.0)
-GREEN = (0.0, 1.0, 0.0, 1.0)
-BLUE = (0.0, 0.0, 1.0, 1.0)
+RED =       (1.0, 0.0, 0.0, 1.0)
+GREEN =     (0.0, 1.0, 0.0, 1.0)
+BLUE =      (0.0, 0.0, 1.0, 1.0)
+BRANCO =    (1.0, 1.0, 1.0, 1.0)
+PRETO =     (0.0, 0.0, 0.0, 0.0)
 
 POSITIONS_SQUARE = (1.0, 1.0, 1.0, 1.0)
 
