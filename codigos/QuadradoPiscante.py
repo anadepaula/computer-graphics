@@ -32,10 +32,10 @@ class QuadradoTrocaPisca(BaseImage):
         
     def define_colors_and_positions(self):
         self.vertices = create_colors_and_positions_byte_array([
-            -0.5, -0.5, 0.0, 1.0,   1.0, 0.0, 0.0, 1.0,   # v0 vermelho
-             0.5, -0.5, 0.0, 1.0,   0.0, 1.0, 0.0, 1.0,   # v1 verde
-             0.5,  0.5, 0.0, 1.0,   0.0, 0.0, 1.0, 1.0,   # v2 azul
-            -0.5,  0.5, 0.0, 1.0,   1.0, 1.0, 0.0, 1.0,   # v3 amarelo
+            -0.5, -0.5, 0.0, 1.0,   *(Colors.RED.value),
+             0.5, -0.5, 0.0, 1.0,   *(Colors.GREEN.value),
+             0.5,  0.5, 0.0, 1.0,   *(Colors.BLUE.value),
+            -0.5,  0.5, 0.0, 1.0,   *(Colors.YELLOW.value),
         ])
 
         # Dois triangulos pela diagonal 0-2. Os indices sao inteiros SEM sinal:
