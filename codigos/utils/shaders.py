@@ -19,4 +19,5 @@ def get_shader(shader_name, shader_type):
 
 
 basico_vertex_shader = get_shader("basico", SHADER_TYPE.VERTEX_SHADER)
+uniform_vertex_shader = get_shader("uquad", SHADER_TYPE.VERTEX_SHADER)
 basico_fragment_shader = get_shader("basico", SHADER_TYPE.FRAGMENT_SHADER)

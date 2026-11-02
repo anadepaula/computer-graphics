@@ -1,20 +1,16 @@
-import sys
-
 import glfw
 import moderngl
 from BaseImageClass import BaseImage
 from utils import (
-    basico_fragment_shader,
-    basico_vertex_shader,
-    create_colors_and_positions_byte_array,
-    create_unsigned_int_array,
-)
-from utils.basics import (
     FLOAT_32_FOR_VAO,
     POSITIONS_SQUARE,
     VARIABLE_SHADERS_COLORS,
     VARIABLE_SHADERS_POSITION,
     Colors,
+    basico_fragment_shader,
+    basico_vertex_shader,
+    create_colors_and_positions_byte_array,
+    create_unsigned_int_array,
 )
 
 
@@ -28,10 +24,10 @@ class QuadradoTrocaPisca(BaseImage):
         
     def define_colors_and_positions(self):
         self.vertices = create_colors_and_positions_byte_array([
-            -0.5, -0.5, 0.0, 1.0,   *(Colors.RED.value),
-             0.5, -0.5, 0.0, 1.0,   *(Colors.GREEN.value),
-             0.5,  0.5, 0.0, 1.0,   *(Colors.BLUE.value),
-            -0.5,  0.5, 0.0, 1.0,   *(Colors.YELLOW.value),
+            -0.5, -0.5, 0.0, 1.0, *(Colors.RED.value),
+             0.5, -0.5, 0.0, 1.0, *(Colors.GREEN.value),
+             0.5,  0.5, 0.0, 1.0, *(Colors.BLUE.value),
+            -0.5,  0.5, 0.0, 1.0, *(Colors.YELLOW.value),
         ])
 
         # Dois triangulos pela diagonal 0-2. Os indices sao inteiros SEM sinal:
