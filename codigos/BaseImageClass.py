@@ -13,15 +13,16 @@ class BaseImage():
         fragment_shader,
         window_title,
     ):
-        print("\t\t enter init base image")
         self.window_width = window_width
         self.window_height = window_height
         self.vertex_shader = vertex_shader
         self.fragment_shader = fragment_shader
         self.window_title = window_title
+        self._closed = False
         self.ctx, self.prog, self.window = self.setup()
+        self.vbo, self.ebo, self.vao = None, None, None
         self.vbo, self.ebo, self.vao = self.define_colors_and_positions()
-        print("\t\t exit init base image")
+        self.resources = (self.vao, self.vbo, self.ebo, self.prog)
     
     @classmethod
     def erro_glfw(cls, codigo, descricao):
@@ -67,15 +68,17 @@ class BaseImage():
         
         return window
 
-    def __del__(self):
-        # print(f"\t\t self dict: {self.__dict__}")
-        if 'vao' in self.__dict__:
-            for resource in (self.vao, self.vbo, self.ebo, self.prog):
-                resource.release()
-            glfw.terminate()
-            print("Execucao finalizada.")
-        else:
-            print("Objeto não foi inicializado corretamente")
+    def close(self):
+        if self._closed:
+            return
+
+        for resource in self.resources:
+            resource.release()
+
+        glfw.destroy_window(self.window)
+        glfw.terminate()
+        self._closed = True
+        print("Execucao finalizada.")
 
     def define_colors_and_positions(self):
         raise NotImplementedError

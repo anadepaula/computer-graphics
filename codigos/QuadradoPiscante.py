@@ -21,14 +21,10 @@ from utils.basics import (
 class QuadradoTrocaPisca(BaseImage):
     
     def __init__(self, window_width, window_height, window_title):
-        print("\t\t enter init qtp")
         vertex_shader = basico_vertex_shader
         fragment_shader = basico_fragment_shader
 
-        print("\t\t call init base image")
         super().__init__(window_width, window_height, vertex_shader, fragment_shader, window_title)
-        print("\t\t exit call init base image")
-        print("\t\t exit init qtp")
         
     def define_colors_and_positions(self):
         self.vertices = create_colors_and_positions_byte_array([
@@ -65,7 +61,7 @@ class QuadradoTrocaPisca(BaseImage):
         return vbo, ebo, vao
 
     def render_image(self):
-        def tecla(janela, key, scancode, action, mode):
+        def tecla(janela, key, _scancode, action, _mode):
             if action != glfw.PRESS:
                 return
             if key == glfw.KEY_ESCAPE:
@@ -75,25 +71,31 @@ class QuadradoTrocaPisca(BaseImage):
             elif key == glfw.KEY_SPACE:
                 self.diagonal_alternativa = not self.diagonal_alternativa
                 novos = self.diagonal_13 if self.diagonal_alternativa else self.diagonal_02
-                
                 self.ebo.write(novos)
         
         glfw.set_key_callback(self.window, tecla)
+        
         while not glfw.window_should_close(self.window):
             if glfw.get_key(self.window, glfw.KEY_ESCAPE) == glfw.PRESS:
                 glfw.set_window_should_close(self.window, True)
 
             self.ctx.clear(*POSITIONS_SQUARE)
-            color = (Colors.BLACK if self.dark_mode else Colors.WHITE).value
-            self.ctx.clear(*color)
+            
+            background_color = (Colors.BLACK if self.dark_mode else Colors.WHITE).value
+            self.ctx.clear(*background_color)
+            
             self.vao.render(moderngl.TRIANGLES)
+            
             glfw.swap_buffers(self.window)
             glfw.poll_events()
 
 
 def main():
     quadtropis = QuadradoTrocaPisca(600, 600, "quadrado troca pisca")
-    quadtropis.render_image()
+    try:
+        quadtropis.render_image()
+    finally:
+        quadtropis.close()
 
 if __name__ == "__main__":
     main()
