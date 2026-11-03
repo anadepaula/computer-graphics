@@ -51,25 +51,40 @@ ESCALA_MAXIMO = 1
 
 VERTEX_SHADER = uniform_vertex_shader
 FRAGMENT_SHADER = basico_fragment_shader
+SHADERS = Path(__file__).parent/"shaders"
 
 def load_shaders_and_create_objects():
     print(f"{VERTEX_SHADER=}")
     print(f"{FRAGMENT_SHADER=}")
     glfw.swap_interval(1)
     ctx = moderngl.create_context()
+    print(f"{ctx=}")
+    vs = (SHADERS/"uquad.vert").read_text(encoding="utf-8")
+    print(f"{vs=}")
+    fs=(SHADERS/"basico.frag").read_text(encoding="utf-8")
+    print(f"{fs=}")
+    
     prog = ctx.program(
-        vertex_shader=VERTEX_SHADER,
-        fragment_shader=FRAGMENT_SHADER,
+        # vertex_shader=VERTEX_SHADER,
+        # fragment_shader=FRAGMENT_SHADER,
+        vertex_shader=vs,
+        fragment_shader=fs,
     )
+    print(f"{prog=}")
 
     vbo = ctx.buffer(VERTICES)
+    print(f"{vbo=}")
+    
     ebo = ctx.buffer(DIAGONAL_02)
+    print(f"{ebo=}")
 
     vao = ctx.vertex_array(
         prog, 
         [(vbo, FLOAT_32_FOR_VAO, VARIABLE_SHADERS_POSITION)], 
         index_buffer=ebo,
     )
+    print(f"{vao=}")
+    
     glfw.set_key_callback(janela, tecla)
     
     return ctx, prog, vbo, ebo, vao
